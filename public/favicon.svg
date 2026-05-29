@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Brutal yellow tile -->
+  <rect x="3" y="3" width="58" height="58" rx="6" fill="#f5c542" stroke="#1a1a1a" stroke-width="4"/>
+
+  <!-- Cat head + ears (single path, inked outline) -->
+  <path
+    d="M14 28 L20 10 L28 24 L36 24 L44 10 L50 28 Q52 50 32 56 Q12 50 14 28 Z"
+    fill="none"
+    stroke="#1a1a1a"
+    stroke-width="4"
+    stroke-linejoin="round" />
+
+  <!-- Eyes — closed smug arcs -->
+  <path d="M22 36 Q26 32 30 36" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M34 36 Q38 32 42 36" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M30 42 L34 42 L32 45 Z" fill="#1a1a1a"/>
+
+  <!-- Whiskers -->
+  <path d="M6 42 L20 43 M6 48 L20 46 M58 42 L44 43 M58 48 L44 46"
+        stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

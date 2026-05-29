@@ -1,0 +1,119 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only one deploy at a time. New pushes wait for the in-flight one to finish
+# instead of racing it.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun store
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 3
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Trust the host
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -p "${{ secrets.VPS_PORT }}" -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Make sure target directory exists
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" "mkdir -p \"$DEPLOY_PATH\""
+
+      - name: Deploy via rsync
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        # --delete keeps the target tidy (removes files that no longer exist
+        # in dist), but we exclude .well-known so any ACME / verification
+        # files placed there server-side aren't blown away.
+        run: |
+          rsync -avz --delete \
+            --exclude='.well-known' \
+            -e "ssh -p $VPS_PORT -o StrictHostKeyChecking=yes" \
+            dist/ \
+            "$VPS_USER@$VPS_HOST:$DEPLOY_PATH/"
+
+      - name: Smoke check
+        # Hits the deployed URL via the PROD_URL secret. Skipped silently if
+        # the secret isn't set (e.g. before the domain is pointed).
+        env:
+          PROD_URL: ${{ secrets.PROD_URL }}
+        run: |
+          if [ -z "$PROD_URL" ]; then
+            echo "PROD_URL not set; skipping smoke check."
+            exit 0
+          fi
+          set -e
+          status=$(curl -s -o /dev/null -w "%{http_code}" -L "$PROD_URL" || true)
+          echo "HTTP status: $status"
+          case "$status" in
+            2*|3*) echo "OK" ;;
+            *)     echo "Smoke check failed"; exit 1 ;;
+          esac
+        continue-on-error: true
