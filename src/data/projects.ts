@@ -2,12 +2,12 @@ import type { Project } from '@domain/index'
 
 export const projects: Project[] = [
   {
-    slug: 'sigma-erp',
-    title: 'SIGMA ERP',
+    slug: 'plantation-erp',
+    title: 'Plantation ERP',
     summary:
-      'Enterprise-wide ERP for Socfindo — every module, owned end-to-end as Technical Lead.',
+      'Enterprise-wide ERP for a plantation (perkebunan) operation — every module, owned end-to-end as Technical Lead.',
     description:
-      'SIGMA is the full ERP system delivered to Socfindo through Iweka Digital Solusi. It started with payroll and clinic modules and now covers the rest of the business as scope expanded. As Technical Lead I drive requirement gathering with stakeholders, design the architecture, assign and review work for the developer team, and own data structures, validation rules, and calculation logic across modules. The stack is built around a Go Fiber backend with Huma for typed routes and Kafka for async workflows, a Svelte frontend, Redis for caching, and a mix of MS SQL Server (for legacy parity) and PostgreSQL (for new modules).',
+      'A full ERP system for a plantation and harvesting operation, delivered to an enterprise client through Iweka Digital Solusi. It started with payroll and clinic modules and now covers the rest of the business as scope expanded. As Technical Lead I drive requirement gathering with stakeholders, design the architecture, assign and review work for the developer team, and own data structures, validation rules, and calculation logic across modules. The stack is built around a Go Fiber backend with Huma for typed routes and Kafka for async workflows, a Svelte frontend, Redis for caching, and a mix of MS SQL Server (for legacy parity) and PostgreSQL (for new modules).',
     role: 'Technical Lead',
     year: 2026,
     stack: [

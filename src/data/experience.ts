@@ -12,7 +12,7 @@ export const experience: ExperienceEntry[] = [
     end: 'Present',
     location: 'Medan, North Sumatra, Indonesia',
     summary:
-      'Promoted from Full Stack Developer to Technical Lead in May 2026. Own the SIGMA ERP build for Socfindo across all modules — payroll and clinic plus everything else as scope expanded. Drive requirement gathering with stakeholders, design modular and scalable architecture, assign and review work for the developer team, and own core data structures, validation rules, and calculation logic across modules.',
+      'Promoted from Full Stack Developer to Technical Lead in May 2026. Own the full ERP build for a plantation (perkebunan) operation across all modules — payroll and clinic plus everything else as scope expanded. Drive requirement gathering with stakeholders, design modular and scalable architecture, assign and review work for the developer team, and own core data structures, validation rules, and calculation logic across modules.',
     note: 'Contractually employed under PT. Indowebhost Kreasi; client-facing work delivered under the Iweka Digital Solusi brand.',
   },
   {
@@ -22,7 +22,7 @@ export const experience: ExperienceEntry[] = [
     end: '2026-05',
     location: 'Medan, North Sumatra, Indonesia',
     summary:
-      'Built the payroll and clinic modules of SIGMA ERP from the ground up. Conducted in-depth requirement gathering with stakeholders, collaborated cross-functionally on modular and scalable design, and implemented core functionalities including data structures, validation rules, and calculation logic. Analyzed gaps in the legacy system and proposed process improvements that produced more efficient data flow and less manual handling.',
+      'Built the payroll and clinic modules of an enterprise ERP system for a plantation (perkebunan) operation from the ground up. Conducted in-depth requirement gathering with stakeholders, collaborated cross-functionally on modular and scalable design, and implemented core functionalities including data structures, validation rules, and calculation logic. Analyzed gaps in the legacy system and proposed process improvements that produced more efficient data flow and less manual handling.',
   },
   {
     company: 'RaihCPNS',
